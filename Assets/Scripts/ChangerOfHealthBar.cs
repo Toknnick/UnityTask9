@@ -1,15 +1,16 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
-public class HealthBar : MonoBehaviour
+public class ChangerOfHealthBar : MonoBehaviour
 {
-    [SerializeField] private Image _healthBar;
-    private float _nowHealth;
+    [SerializeField] private UnityEvent<float> _indicatorOfHealthBar;
     private float _targetHealth;
     private float _countHealthForChange;
+    private float _nowHealth;
     private int _maxHealth;
     private int _minHealth;
+    private Coroutine _coroutineChangingHealth;
 
     public void ReduceHealth()
     {
@@ -27,10 +28,16 @@ public class HealthBar : MonoBehaviour
 
     private IEnumerator ChangeHealth()
     {
+        if (_coroutineChangingHealth != null)
+        {
+            StopCoroutine(_coroutineChangingHealth);
+            _coroutineChangingHealth = StartCoroutine(ChangeHealth());
+        }
+
         while (_nowHealth < _targetHealth || _nowHealth > _targetHealth)
         {
+            _indicatorOfHealthBar?.Invoke(_nowHealth);
             _nowHealth = Mathf.MoveTowards(_nowHealth, _targetHealth, Time.deltaTime);
-            _healthBar.fillAmount = _nowHealth;
             yield return null;
         }
     }
