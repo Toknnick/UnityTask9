@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 53123552}
   - component: {fileID: 53123551}
   m_Layer: 5
-  m_Name: Add healt
+  m_Name: Add health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -208,8 +208,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1329645813}
-        m_TargetAssemblyTypeName: HealthBar, Assembly-CSharp
-        m_MethodName: AddHealth
+        m_TargetAssemblyTypeName: Health, Assembly-CSharp
+        m_MethodName: Heal
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -342,8 +342,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1329645813}
-        m_TargetAssemblyTypeName: HealthBar, Assembly-CSharp
-        m_MethodName: ReduceHealth
+        m_TargetAssemblyTypeName: Health, Assembly-CSharp
+        m_MethodName: Damage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

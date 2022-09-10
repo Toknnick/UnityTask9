@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Health))]
 public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Image _healthBar;
@@ -9,17 +10,16 @@ public class HealthBar : MonoBehaviour
     private Coroutine _coroutineChangingHealth;
     private Health _health;
 
-    private void OnEnable() => Health.OnChanged += ShowBar;
+    private void OnEnable() => Health.Changed += ShowBar;
 
-    private void OnDisable() => Health.OnChanged -= ShowBar;
+    private void OnDisable() => Health.Changed -= ShowBar;
 
     private IEnumerator SmoothlyChangeHealth()
     {
-
-        while (_health.NowHealth < _health.TargetHealth || _health.NowHealth > _health.TargetHealth)
+        while (_health.Current != _health.TargetHealth)
         {
-            _healthBar.fillAmount = _health.NowHealth;
-            _health.ChangeHealth(Mathf.MoveTowards(_health.NowHealth, _health.TargetHealth, Time.deltaTime));
+            _healthBar.fillAmount = _health.Current;
+            _health.ChangeHealth(Mathf.MoveTowards(_health.Current, _health.TargetHealth, Time.deltaTime));
             yield return null;
         }
     }
