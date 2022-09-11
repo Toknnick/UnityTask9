@@ -9,6 +9,8 @@ public class HealthBar : MonoBehaviour
 
     private Coroutine _coroutineChangingHealth;
     private Health _health;
+    private float _current;
+    private float _targetHealth;
 
     private void OnEnable() => Health.Changed += ShowBar;
 
@@ -16,16 +18,21 @@ public class HealthBar : MonoBehaviour
 
     private IEnumerator SmoothlyChangeHealth()
     {
-        while (_health.Current != _health.TargetHealth)
+        while (_current != _targetHealth)
         {
-            _healthBar.fillAmount = _health.Current;
-            _health.ChangeHealth(Mathf.MoveTowards(_health.Current, _health.TargetHealth, Time.deltaTime));
+            _healthBar.fillAmount = _current;
+            _current = Mathf.MoveTowards(_current, _targetHealth, Time.deltaTime);
             yield return null;
         }
+
+        _health.Change(_current);
     }
 
-    private void ShowBar()
+    private void ShowBar(float countHealthForChange, float current)
     {
+        _current = current;
+        _targetHealth = current + countHealthForChange;
+
         if (_coroutineChangingHealth != null)
         {
             StopCoroutine(_coroutineChangingHealth);
@@ -37,5 +44,9 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    private void Start() => _health = GetComponent<Health>();
+    private void Start()
+    {
+        _health = GetComponent<Health>();
+    }
+
 }

@@ -3,38 +3,32 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public static Action Changed;
+    public static Action<float, float> Changed;
 
     private float _countHealthForChange;
     private int _maxHealth;
     private int _minHealth;
+    private float _current;
 
-    public float Current { get; private set; }
-    public float TargetHealth { get; private set; }
-
-    public void ChangeHealth(float nowHealth)
+    public void Change(float nowHealth)
     {
-        Current = nowHealth;
+        _current = nowHealth;
     }
 
     public void Damage()
     {
-        TargetHealth = Current - _countHealthForChange;
+        if (_current  <= _minHealth)
+            _current = 0;
 
-        if (Current > _minHealth)
-            Changed?.Invoke();
-        else
-            TargetHealth = 0;
+        Changed?.Invoke(-_countHealthForChange, _current);
     }
 
     public void Heal()
     {
-        TargetHealth = Current + _countHealthForChange;
+        if (_current  >= _maxHealth)
+            _current = 1;
 
-        if (Current < _maxHealth)
-            Changed?.Invoke();
-        else
-            TargetHealth = 1;
+        Changed?.Invoke(_countHealthForChange, _current);
     }
 
     private void Start()
@@ -42,6 +36,6 @@ public class Health : MonoBehaviour
         _maxHealth = 1;
         _minHealth = 0;
         _countHealthForChange = 0.1f;
-        Current = 1;
+        _current = 1;
     }
 }
